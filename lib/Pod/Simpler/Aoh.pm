@@ -185,8 +185,6 @@ Returns the parsed pod as an array of hashes.
 
 Return a single *section* of pod.
 
-=head2 function2
-
 =head1 AUTHOR
 
 Robert Acock, C<< <thisusedtobeanemail at gmail.com> >>

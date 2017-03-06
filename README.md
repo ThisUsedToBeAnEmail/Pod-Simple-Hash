@@ -49,8 +49,6 @@ Returns the parsed pod as an array of hashes.
 
 Return a single \*section\* of pod.
 
-## function2
-
 # AUTHOR
 
 Robert Acock, `<thisusedtobeanemail at gmail.com>`
