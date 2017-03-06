@@ -41,13 +41,17 @@ Parse a file containing pod.
 
 Parse a string containing pod.
 
+## pod
+
+Returns the parsed pod as an arrayref of hashes.
+
 ## aoh
 
 Returns the parsed pod as an array of hashes.
 
 ## get
 
-Return a single \*section\* of pod.
+Accepts an index, returns a single \*section\* of pod.
 
 # AUTHOR
 

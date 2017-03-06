@@ -177,13 +177,17 @@ Parse a file containing pod.
 
 Parse a string containing pod.
 
+=head2 pod
+
+Returns the parsed pod as an arrayref of hashes.
+
 =head2 aoh
 
 Returns the parsed pod as an array of hashes.
 
 =head2 get
 
-Return a single *section* of pod.
+Accepts an index, returns a single *section* of pod.
 
 =head1 AUTHOR
 
