@@ -19,7 +19,7 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Moo' => '1.0010001',
-        'Pod::Simple' => '3.35',
+        'Pod::Simple' => '3.29',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Pod-Simpler-Aoh-*' },
