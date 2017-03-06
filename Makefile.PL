@@ -18,8 +18,8 @@ WriteMakefile(
         'Test::More' => 0,
     },
     PREREQ_PM => {
-        #'ABC'              => 1.6,
-        #'Foo::Bar::Module' => 5.0401,
+        'Moo' => '1.0010001',
+        'Pod::Simple' => '3.35',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'Pod-Simpler-Aoh-*' },

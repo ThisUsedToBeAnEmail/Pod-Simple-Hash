@@ -3,7 +3,6 @@ use 5.006;
 use strict;
 use warnings;
 use Test::More;
-use Data::Dumper;
 
 BEGIN {
     use_ok( 'Pod::Simpler::Aoh' ) || print "Bail out!\n";
