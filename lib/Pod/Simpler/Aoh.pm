@@ -2,6 +2,8 @@ package Pod::Simpler::Aoh;
 
 use Moo;
 
+our $VERSION = '0.02';
+
 use feature qw/switch/;
 no warnings 'experimental::smartmatch';
 
@@ -10,6 +12,7 @@ extends 'Pod::Simple';
 has pod => (
     is      => 'rw',
     lazy    => 1,
+    clearer => 1,
     default => sub { [] },
 );
 
@@ -25,25 +28,25 @@ has pod_elements => (
     lazy    => 1,
     default => sub {
         return {
-			Document => 'skip',
-            head1 => 'title',
-            head2 => 'title',
-            head2 => 'title', 
-            head4 => 'title',
-            Para  => 'content',
+            Document    => 'skip',
+            head1       => 'title',
+            head2       => 'title',
+            head2       => 'title',
+            head4       => 'title',
+            Para        => 'content',
             'item-text' => 'content',
             'over-text' => 'content',
-            Verbatim => 'content',
-            Data => 'content',
-            C => 'content',         
-            L => 'content',        
-            B => 'content',         
-            I => 'content',        
-            E => 'content',         
-            F => 'content',         
-            S => 'content',         
-            X => 'content',         
-            join => 'content',      
+            Verbatim    => 'content',
+            Data        => 'content',
+            C           => 'content',
+            L           => 'content',
+            B           => 'content',
+            I           => 'content',
+            E           => 'content',
+            F           => 'content',
+            S           => 'content',
+            X           => 'content',
+            join        => 'content',
         };
     }
 );
@@ -52,19 +55,20 @@ has 'element_name' => (
     is      => 'rw',
     clearer => 1,
     default => q{},
-    
+
 );
 
-for (qw/parse_file parse_from_file parse_string_document/){
+for (qw/parse_file parse_from_file parse_string_document/) {
     around $_ => sub {
-        my ($orig, $self, $args) = @_;
+        my ( $orig, $self, $args ) = @_;
+        $self->clear_pod;
         $self->$orig($args);
         return $self->pod;
     };
 }
 
 sub get {
-    return $_[0]->pod->[$_[1]];
+    return $_[0]->pod->[ $_[1] ];
 }
 
 sub aoh {
@@ -72,26 +76,27 @@ sub aoh {
 }
 
 sub _handle_element_start {
-    $_[0]->element_name($_[1]);
-    if ( $_[0]->pod_elements->{$_[1]} eq 'title' ) {
-        $_[0]->section->{title} && $_[0]->section->{identifier} 
-            and $_[0]->_insert_pod;
-        not $_[0]->section->{identifier} 
-            and $_[0]->section->{identifier} = $_[1];
+    $_[0]->element_name( $_[1] );
+    if ( $_[0]->pod_elements->{ $_[1] } eq 'title' ) {
+        $_[0]->section->{title} && $_[0]->section->{identifier}
+          and $_[0]->_insert_pod;
+        not $_[0]->section->{identifier}
+          and $_[0]->section->{identifier} = $_[1];
     }
 }
 
 sub _handle_text {
     my $el_name = $_[0]->element_name || 'join';
     $_[0]->clear_element_name;
-    given ($_[0]->pod_elements->{$el_name}){
+    given ( $_[0]->pod_elements->{$el_name} ) {
         when ('content') {
             my $el_args = {
-                text => $_[1],
+                text         => $_[1],
                 element_name => $el_name,
-                content => $_[0]->section->{content},
+                content      => $_[0]->section->{content},
             };
-            $_[0]->section->{content} = $_[0]->_parse_text('content', $el_args);
+            $_[0]->section->{content} =
+              $_[0]->_parse_text( 'content', $el_args );
         }
         when ('title') {
             $_[0]->section->{title} = $_[1];
@@ -108,21 +113,21 @@ sub _handle_element_end {
 }
 
 sub _insert_pod {
-    push @{ $_[0]->pod }, $_[0]->section; 
+    push @{ $_[0]->pod }, $_[0]->section;
     return $_[0]->clear_section;
 }
 
 sub _parse_text {
-    if (my $content = $_[2]->{$_[1]}) {
+    if ( my $content = $_[2]->{ $_[1] } ) {
         if ( $_[2]->{element_name} =~ m{item-text|over-text} ) {
             return $content . "\n\n" . $_[2]->{text} . "\n\n";
         }
-        # expecting either a new paragragh or code example
+        # expecting a code example
         elsif ( $content =~ /[\.\;\:\*]$/ ) {
             return $content . "\n\n" . $_[2]->{text};
         }
         return $content . $_[2]->{text};
-    } 
+    }
     return $_[2]->{text};
 }
 
@@ -132,15 +137,13 @@ __END__
 
 =head1 NAME
 
-Pod::Simpler::Aoh - Parse pod into array of hashes.
+Pod::Simpler::Aoh - Parse pod into an array of hashes.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
-
-our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
