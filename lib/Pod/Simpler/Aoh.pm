@@ -2,7 +2,7 @@ package Pod::Simpler::Aoh;
 
 use Moo;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use feature qw/switch/;
 no warnings 'experimental::smartmatch';
@@ -55,7 +55,6 @@ has 'element_name' => (
     is      => 'rw',
     clearer => 1,
     default => q{},
-
 );
 
 for (qw/parse_file parse_from_file parse_string_document/) {
@@ -120,13 +119,13 @@ sub _insert_pod {
 sub _parse_text {
     if ( my $content = $_[2]->{ $_[1] } ) {
         if ( $_[2]->{element_name} =~ m{item-text|over-text} ) {
-            return $content . "\n\n" . $_[2]->{text} . "\n\n";
+            return sprintf "%s\n\n%s\n\n", $content, $_[2]->{text};
         }
         # expecting a code example
         elsif ( $content =~ /[\.\;\:\*]$/ ) {
-            return $content . "\n\n" . $_[2]->{text};
+            return sprintf "%s\n\n%s", $content, $_[2]->{text};
         }
-        return $content . $_[2]->{text};
+        return sprintf "%s%s", $content, $_[2]->{text};
     }
     return $_[2]->{text};
 }
@@ -141,7 +140,7 @@ Pod::Simpler::Aoh - Parse pod into an array of hashes.
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
