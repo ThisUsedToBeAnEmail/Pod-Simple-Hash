@@ -1,61 +1,46 @@
 package Pod::Simpler::Aoh;
 
 use Moo;
+use MooX::LazierAttributes;
+use Types::Standard qw/Str ArrayRef HashRef/;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use feature qw/switch/;
 no warnings 'experimental::smartmatch';
 
 extends 'Pod::Simple';
 
-has pod => (
-    is      => 'rw',
-    lazy    => 1,
-    clearer => 1,
-    default => sub { [] },
+attributes(
+    pod => [ rw, ArrayRef, { lzy_array, clr } ],
+    section => [ rw, HashRef, { lzy_hash, clr } ],
+    pod_elements => [ HashRef, { lzy, bld } ],
+    element_name => [ rw, Str, { clr } ],    
 );
 
-has section => (
-    is      => 'rw',
-    lazy    => 1,
-    clearer => 1,
-    default => sub { {} },
-);
-
-has pod_elements => (
-    is      => 'ro',
-    lazy    => 1,
-    default => sub {
-        return {
-            Document    => 'skip',
-            head1       => 'title',
-            head2       => 'title',
-            head2       => 'title',
-            head4       => 'title',
-            Para        => 'content',
-            'item-text' => 'content',
-            'over-text' => 'content',
-            Verbatim    => 'content',
-            Data        => 'content',
-            C           => 'content',
-            L           => 'content',
-            B           => 'content',
-            I           => 'content',
-            E           => 'content',
-            F           => 'content',
-            S           => 'content',
-            X           => 'content',
-            join        => 'content',
-        };
-    }
-);
-
-has 'element_name' => (
-    is      => 'rw',
-    clearer => 1,
-    default => q{},
-);
+sub _build_pod_elements {
+    return {
+        Document    => 'skip',
+        head1       => 'title',
+        head2       => 'title',
+        head2       => 'title',
+        head4       => 'title',
+        Para        => 'content',
+        'item-text' => 'content',
+        'over-text' => 'content',
+        Verbatim    => 'content',
+        Data        => 'content',
+        C           => 'content',
+        L           => 'content',
+        B           => 'content',
+        I           => 'content',
+        E           => 'content',
+        F           => 'content',
+        S           => 'content',
+        X           => 'content',
+        join        => 'content',
+    };
+}
 
 for (qw/parse_file parse_from_file parse_string_document/) {
     around $_ => sub {
@@ -140,7 +125,7 @@ Pod::Simpler::Aoh - Parse pod into an array of hashes.
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
